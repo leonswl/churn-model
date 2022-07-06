@@ -16,6 +16,9 @@ Source: [Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn?
 # Initialise environment
 python3 -m venv .venv
 
+# initialise virtual environment
+source .venv/bin/activate
+
 # Install dependencies
 pip install -r requirements.txt
 
