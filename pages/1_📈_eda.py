@@ -90,7 +90,8 @@ def eda():
     """
     st.set_page_config(
         page_title="EDA",
-        page_icon="📈"
+        page_icon="📈",
+        layout="wide"
     )
 
     st.markdown("# Exploratory Data Analysis (EDA) Demo")
@@ -98,26 +99,40 @@ def eda():
     st.write("""
         This demo illustrates the descriptive analysis of our data. Some of the plots are quite heavy so it might take a few minutes for the entire demo to be completely rendered. 
     """)
-
+    
     # load dataframe
     df = load_data()
-    st.write(df.head())
 
-    r1_c1, r1_c2 = st.columns(2)
-
-    with r1_c1:
-        df_shape = np.shape(df)
-        st.write("Shape of dataset:", df_shape[0], "rows,", df_shape[1], "columns")    
-
+    with st.container():
         st.markdown("""
-        Churn predictions often have a classis case of class imbalance. To observe if this phenomenon exist within the dataset, I'll plot the ratio of churn outcomes, the dependent variable. 
+        ## About the dataset
 
-        Since the number of users who did not churn far exceeds those that churned, it appears that we have class imbalance. 
+        Lets take a look at the header of the dataset.
         """)
+        st.write(df.head())
 
-    with r1_c2:
-        churn_fig = plot_churn(df)
-        st.pyplot(churn_fig)
+        r1_c1, r1_c2, r1_c3 = st.columns(3)
+    
+        # first column
+        with r1_c1:
+            df_shape = np.shape(df)
+            st.write("Shape of dataset:", df_shape[0], "rows,", df_shape[1], "columns")    
+
+            st.markdown("""
+            Churn predictions often have a classis case of class imbalance. To observe if this phenomenon exist within the dataset, I'll plot the ratio of churn outcomes, the dependent variable. 
+
+            Since the number of users who did not churn far exceeds those that churned, it appears that we have class imbalance. 
+
+            ** Problem with Class Imbalance**
+            Most machine learning algorithms work best when the number of samples in each class are about equal. This is because most algorithms are designed to maximize accuracy and reduce errors.
+            """)
+
+        # second column
+        with r1_c2:
+            churn_fig = plot_churn(df)
+            st.pyplot(churn_fig)
+
+        # third column as empty
 
     # container for categorical variables plots
     with st.container():
