@@ -142,7 +142,8 @@ def eda():
         """)
         # plot crosstab bar chart for categorical variables
         cat_var_fig = plot_crosstabs_cat_vars(df)
-        st.pyplot(cat_var_fig)
+        with st.expander("See Categorical Variables Crosstabs"):
+            st.pyplot(cat_var_fig)
 
     with st.container():
         st.subheader("Continuous Variables")
@@ -151,7 +152,8 @@ def eda():
         """)
         # plot crosstab bar chart for continuous variables
         cont_var_fig = plot_crosstabs_cont_vars(df)
-        st.pyplot(cont_var_fig)    
+        with st.expander("See Continuous Variables Crosstabs"):
+            st.pyplot(cont_var_fig)    
 
     with st.container():
         st.subheader("Discussion Points")
