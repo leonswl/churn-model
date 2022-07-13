@@ -129,6 +129,26 @@ def plot_roc_curve (X_test, y_test, logreg):
     # plt.show()
 
     return fig
+
+def plot_feat_impt (logreg, X_encoded):
+    """
+    Function to plot feature importance
+
+    Args:
+        logreg [model instance]: Log Regression model instance
+        X_encoded [dataframe]: data with predictor variables encoded from OneHotEncoding()
+
+    Returns:
+        fig [matplotlib figure]: matplotlib figure 
+    """
+    feat_importance = logreg.coef_.flatten()
+    fig, ax = plt.subplots(figsize=(10,10))
+    # plt.rcParams["figure.figsize"] = (10,10)
+    ax.barh(X_encoded.columns, feat_importance, color='g')
+    plt.title("Barplot Summary of Feature Importance")
+    plt.xlabel("Score")
+    # plt.show()
+    return fig
     
 
 def log_reg():
@@ -170,6 +190,8 @@ def log_reg():
     """)
     # ROC Curve
     roc_curve = plot_roc_curve(X_test, y_test,model_instance.model)
+    # Feature Importance
+    feat_impt = plot_feat_impt(model_instance.model,X_encoded)
 
     ##### ------ Persist Model ------ #####
     # create an iterator object with write permission
@@ -177,8 +199,9 @@ def log_reg():
         pickle.dump(model_instance, files, pickle.HIGHEST_PROTOCOL)
     
     # save figures
-    cnf_matrix.savefig('assets/cnf_matrix.png')
-    roc_curve.savefig('assets/roc_curve.png')
+    cnf_matrix.savefig('assets/cnf_matrix.png',bbox_inches='tight')
+    roc_curve.savefig('assets/roc_curve.png',bbox_inches='tight')
+    feat_impt.savefig('assets/feat_impt.png',bbox_inches='tight')
 
 if __name__ == '__main__':
     log_reg()
