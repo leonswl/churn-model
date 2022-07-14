@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.metrics import classification_report
 from src.log_reg import log_model, plot_cnf_matrix, plot_roc_curve, plot_feat_impt, OneHotEncoding, apply_smote
 import matplotlib.pyplot as plt
 from PIL import Image
-import pickle
 
 
 def log_reg(data):
@@ -39,8 +40,6 @@ def log_reg(data):
             select_c = st.slider("Select regularisation strength C",min_value=0.1, max_value=20.0,value=1.0,step=0.1)
             st.session_state['C'] = select_c
 
-    st.write(select_c)
-    st.write(st.session_state['C'])
     ## START - Sidebar
 
     ## Filter data based on User Input
@@ -75,12 +74,8 @@ def log_reg(data):
 
     # END - Logistic Regression 
 
-    # load saved model
-    # with open('data/model.pkl' , 'rb') as f:
-    #     model_instance = pickle.load(f)
 
     # load model evaluation images
-    cnf_matrix = Image.open('assets/cnf_matrix.png')
     roc_curve = Image.open('assets/roc_curve.png')
     feat_impt = Image.open('assets/feat_impt.png')
 
@@ -139,42 +134,46 @@ x_smote, y_smote = smote_nc.fit_resample(X.to_numpy(),y.to_numpy())
             st.write(y_train_smote.value_counts().reset_index().rename({0:'Users'},axis=1))
             st.markdown("""The number of users in each class is now equal and balanced.""")
 
+    # Container for Confusion Matrix and ROC Curve
     with st.container():
         st.subheader("Model Evaluation")
         st.markdown("""
         To evaluate our logistic regression model, the performance metrics used here will be the confusion matrix and AUC scores. 
         """)
+        st.text('Model Report:\n ' + classification_report(y_test,y_pred))
 
         row2_col1, row2_col2 = st.columns(2)
         
+        # Confusion Matrix
         with row2_col1:
             st.subheader("Confusion Matrix")
-            st.image(cnf_matrix, caption='Confusion Matrix')
+            cnf_matrix = plot_cnf_matrix(y_test,y_pred)
+            st.pyplot(cnf_matrix)
+            st.write('Accuracy (or Classification Rate): ',round(metrics.accuracy_score(y_test, y_pred),2))
+            st.write('Precision: ',round(metrics.precision_score(y_test, y_pred,pos_label='Yes'),2))
+            st.write('Recall: ',round(metrics.recall_score(y_test, y_pred,pos_label='Yes'),2))
+
+        # ROC Curve
+        with row2_col2:
+            st.subheader("ROC Curve")
+            roc_curve = plot_roc_curve(X_test, y_test,model_instance.model)
+            st.pyplot(roc_curve)
             st.markdown("""
-            **Accuracy**
-            Our accuracy score (or Classification Rate) is 75.2%, considered as a reasonable good accuracy.
-
-            **Precision**
-            Precision measures how accurate the model is when making a prediction (ho often it is correct). Our precision score is 51.8%, which means that the Logistic Regression model successfully predict users are going to churn 52.9% of the time. 
-
-            **Recall**
-            Our recall score is 79.6%, which means the Logistic Regression model can identfy users who have churn 79.9% of the time.
+            Our AUC score is 0.835. AUC Score of 1 represents perfec classifier, and 0.5 represents a worthless classifier. In this case, our AUC looks decent.
             """)
 
+    # Feature Importance
+    with st.container():
+        row3_col1, row3_col2 = st.columns(2)
+        with row3_col1:
             st.subheader("Feature Importance")
             st.markdown("To better understand the performance of our model, we can investigate each individual feature. To do so, we’ll start by getting each individual feature’s coefficient score:")
-            st.image(feat_impt, caption='Feature Importance')
+            feat_impt = plot_feat_impt(model_instance.model,X_encoded)
+            st.pyplot(feat_impt)
             with st.expander("What are feature importance used for?"):
                 st.markdown("""
                 Scores marked with a zero coefficient, or very near zero coefficient, indicate that the model found those features unimportant and essentially removed them from the model. Positive scores indicate a feature that predicts class 1 (“yes”). Negative scores indicate a feature that predicts class 2 (“no”).
                 """)
-        
-        with row2_col2:
-            st.subheader("ROC Curve")
-            st.image(roc_curve, caption='ROC Curve')
-            st.markdown("""
-            Our AUC score is 0.835. AUC Score of 1 represents perfec classifier, and 0.5 represents a worthless classifier. In this case, our AUC looks decent.
-            """)
 
 
 
