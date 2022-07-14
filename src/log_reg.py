@@ -30,7 +30,7 @@ def OneHotEncoding(data):
 
     return data_encoded
 
-def apply_smotenc (X,y):
+def apply_smote (X,y):
     """
     Function to apply SMOTE on dataset
 

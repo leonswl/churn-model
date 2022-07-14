@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from src.log_reg import log_model, plot_cnf_matrix, plot_roc_curve, plot_feat_impt, OneHotEncoding, apply_smotenc
+from src.log_reg import log_model, plot_cnf_matrix, plot_roc_curve, plot_feat_impt, OneHotEncoding, apply_smote
 import matplotlib.pyplot as plt
 from PIL import Image
 import pickle
 
 
-def log_reg():
+def log_reg(data):
     """
     Function to render Log Regression app
     """
@@ -19,35 +19,46 @@ def log_reg():
     )
 
     st.markdown("# Churn Model using Logistics Regression Demo")
-    st.sidebar.header("Log Regression Demo")
+    
     st.write("""
         This demo illustrates the use of logistic regression to build a churn model for predicting churn outcomes. 
     """)
 
-    # START - Run logistic regression model
 
-    ##### ------  1. load preprocessed data ------ #####
-    df = pd.read_parquet('data/preprocessed.parquet')
+    ## START - Sidebar
+    st.sidebar.header("Log Regression Demo")
+    with st.sidebar:
+        select_attribute = st.multiselect( label="Select Attributes as the Predictor Variables",
+                        options=list(data.iloc[:,:-1].columns))
+        st.session_state['attribute'] = select_attribute # update session state
 
-    print(f"Load preprocessed data - SUCCESS")
+    ## START - Sidebar
 
+    ## Filter data based on User Input
     # split predictor and target variables to X and y respectively
-    X = df.iloc[:,:-1]
-    y = df.iloc[:,-1]
+    X = data.iloc[:,:-1]
+    y = data.iloc[:,-1]
 
-    ##### ------  2. Perform Encoding of Categorical Variables ------ #####
-    X_encoded = OneHotEncoding(X)
+    if st.session_state['attribute'] == (None or []):
+        filtered_X = X.copy() # data remains unchanged
+    
+    else:
+        filtered_X = X[[c for c in df.columns if c in select_attribute]]
+
+    # START - Run logistic regression model
+    ##### ------  1. Perform Encoding of Categorical Variables ------ #####
+    X_encoded = OneHotEncoding(filtered_X)
     print(f"Encoding Categorical Variables - SUCCESS")
 
-    ##### ------  3. Split train and test set ------ #####
+    ##### ------  2. Split train and test set ------ #####
     X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=0)
 
-    ##### ------  Resolve Class Imbalance ------ #####
-    X_train_smote, y_train_smote = apply_smotenc(X_train, y_train)
+    ##### ------  3. Resolve Class Imbalance ------ #####
+    X_train_smote, y_train_smote = apply_smote(X_train, y_train)
     print(f"Balance Class - SUCCESS")
 
 
-    ##### ------ Fit Logistic Regression model ------ #####
+    ##### ------ 4. Fit Logistic Regression model ------ #####
     model_instance = log_model(X_train_smote,y_train_smote,X_test)
     model_instance.fit()
     y_pred = model_instance.predict()
@@ -159,4 +170,10 @@ x_smote, y_smote = smote_nc.fit_resample(X.to_numpy(),y.to_numpy())
 
 
 if __name__ == '__main__':
-    log_reg()
+    df = pd.read_parquet('data/preprocessed.parquet')
+    print(f"Load preprocessed data - SUCCESS")
+
+    if 'attribute' not in st.session_state:
+        st.session_state['attribute'] = None
+
+    log_reg(df)
