@@ -63,12 +63,22 @@ def apply_smote (X,y):
         return x_smote_df, y_smote_df
 
 class log_model:
-    def __init__ (self,X_train,y_train, X_test):
+    """
+    Logistic Regression Model Class that fits a model based on trained data (X_train, y_train) and predict using X_test
+
+    Args:
+        X_train [dataframe]: dataframe of training dataset with predictor variables
+        y_train [dataframe]: dataframe of training dataset with target variable
+        X_test [dataframe]: dataframe of test dataset with predictor variables
+        C [float]: regularisation parameter
+    
+    """
+    def __init__ (self,X_train,y_train, X_test,C=1):
         self.X = X_train
         self.y = y_train
         self.X_test = X_test
         # initialise log regression
-        self.log_reg = LogisticRegression(max_iter=400)
+        self.log_reg = LogisticRegression(max_iter=400,C=C)
 
     def fit (self):
         self.model = self.log_reg.fit(self.X,self.y)
@@ -173,9 +183,8 @@ def log_reg():
     X_train_smote, y_train_smote = apply_smote(X_train, y_train)
     print(f"Balance Class - SUCCESS")
 
-
     ##### ------ Fit Logistic Regression model ------ #####
-    model_instance = log_model(X_train_smote,y_train_smote,X_test)
+    model_instance = log_model(X_train_smote,y_train_smote,X_test,C=5)
     model_instance.fit()
     y_pred = model_instance.predict()
     print(f"Fit Logistic Regression - SUCCESS")

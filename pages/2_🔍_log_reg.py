@@ -28,10 +28,19 @@ def log_reg(data):
     ## START - Sidebar
     st.sidebar.header("Log Regression Demo")
     with st.sidebar:
-        select_attribute = st.multiselect( label="Select Attributes as the Predictor Variables",
-                        options=list(data.iloc[:,:-1].columns))
-        st.session_state['attribute'] = select_attribute # update session state
+        st.header("1. Data")
+        with st.expander("Columns"):
+            select_attribute = st.multiselect( label="Select Predictor Variables",
+                            options=list(data.iloc[:,:-1].columns))
+            st.session_state['attribute'] = select_attribute # update session state
 
+        st.header("2.Model")
+        with st.expander("Regularisation"):
+            select_c = st.slider("Select regularisation strength C",min_value=0.1, max_value=20.0,value=1.0,step=0.1)
+            st.session_state['C'] = select_c
+
+    st.write(select_c)
+    st.write(st.session_state['C'])
     ## START - Sidebar
 
     ## Filter data based on User Input
@@ -59,7 +68,7 @@ def log_reg(data):
 
 
     ##### ------ 4. Fit Logistic Regression model ------ #####
-    model_instance = log_model(X_train_smote,y_train_smote,X_test)
+    model_instance = log_model(X_train_smote,y_train_smote,X_test,C=select_c)
     model_instance.fit()
     y_pred = model_instance.predict()
     print(f"Fit Logistic Regression - SUCCESS")
@@ -67,8 +76,8 @@ def log_reg(data):
     # END - Logistic Regression 
 
     # load saved model
-    with open('data/model.pkl' , 'rb') as f:
-        model_instance = pickle.load(f)
+    # with open('data/model.pkl' , 'rb') as f:
+    #     model_instance = pickle.load(f)
 
     # load model evaluation images
     cnf_matrix = Image.open('assets/cnf_matrix.png')
@@ -175,5 +184,8 @@ if __name__ == '__main__':
 
     if 'attribute' not in st.session_state:
         st.session_state['attribute'] = None
+    
+    if 'c' not in st.session_state:
+        st.session_state['C'] = 1
 
     log_reg(df)
