@@ -185,8 +185,8 @@ def log_reg():
 
     ##### ------ Fit Logistic Regression model ------ #####
     model_instance = log_model(X_train_smote,y_train_smote,X_test,C=5)
-    model_instance.fit()
-    y_pred = model_instance.predict()
+    model_instance.fit() # train model
+    y_pred = model_instance.predict() # predict against test set
     print(f"Fit Logistic Regression - SUCCESS")
 
     ##### ------ Model Evaluation ------ #####
@@ -196,6 +196,7 @@ def log_reg():
     Accuracy: {metrics.accuracy_score(y_test, y_pred)}
     Precision: {metrics.precision_score(y_test, y_pred,pos_label='Yes')}
     Recall: {metrics.recall_score(y_test, y_pred,pos_label='Yes')}
+    Score: {model_instance.model.score(X_test,y_test)}
     """)
     # ROC Curve
     roc_curve = plot_roc_curve(X_test, y_test,model_instance.model)

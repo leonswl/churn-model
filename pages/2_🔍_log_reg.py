@@ -140,6 +140,7 @@ x_smote, y_smote = smote_nc.fit_resample(X.to_numpy(),y.to_numpy())
         st.markdown("""
         To evaluate our logistic regression model, the performance metrics used here will be the confusion matrix and AUC scores. 
         """)
+        st.write("Model Score: ",round(model_instance.model.score(X_test,y_test),2))
         st.text('Model Report:\n ' + classification_report(y_test,y_pred))
 
         row2_col1, row2_col2 = st.columns(2)
@@ -152,6 +153,7 @@ x_smote, y_smote = smote_nc.fit_resample(X.to_numpy(),y.to_numpy())
             st.write('Accuracy (or Classification Rate): ',round(metrics.accuracy_score(y_test, y_pred),2))
             st.write('Precision: ',round(metrics.precision_score(y_test, y_pred,pos_label='Yes'),2))
             st.write('Recall: ',round(metrics.recall_score(y_test, y_pred,pos_label='Yes'),2))
+            
 
         # ROC Curve
         with row2_col2:

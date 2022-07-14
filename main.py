@@ -29,6 +29,7 @@ def app():
     st.markdown(
         """
         ### Demo Components:
+        Note: If viewed using smart phone devices, please use the arrow button at the top left to toggle between the page components.
         - EDA
         - Logistics Regression
 
