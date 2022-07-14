@@ -170,7 +170,7 @@ def log_reg():
     X_train, X_test, y_train, y_test = train_test_split(X_encoded, y, test_size=0.2, random_state=0)
 
     ##### ------  Resolve Class Imbalance ------ #####
-    X_train_smote, y_train_smote = apply_smotenc(X_train, y_train)
+    X_train_smote, y_train_smote = apply_smote(X_train, y_train)
     print(f"Balance Class - SUCCESS")
 
 
