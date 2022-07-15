@@ -72,13 +72,7 @@ def log_reg(data):
     y_pred = model_instance.predict()
     print(f"Fit Logistic Regression - SUCCESS")
 
-    # END - Logistic Regression 
-
-
-    # load model evaluation images
-    roc_curve = Image.open('assets/roc_curve.png')
-    feat_impt = Image.open('assets/feat_impt.png')
-
+    # END - Logistic Regression
 
     with st.container():
         st.markdown("""
