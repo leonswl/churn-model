@@ -5,7 +5,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-@st.cache(hash_funcs={matplotlib.figure.Figure: lambda _: None})
+@st.cache(hash_funcs={matplotlib.figure.Figure: lambda _: None},ttl=300)
 def plot_churn(data):
     """
     Function to plot churn ratio
@@ -22,7 +22,7 @@ def plot_churn(data):
     return fig
 
 
-@st.cache(hash_funcs={matplotlib.figure.Figure: lambda _: None})
+@st.cache(hash_funcs={matplotlib.figure.Figure: lambda _: None},ttl=300)
 def plot_crosstabs_cat_vars(data):
     """
     Function to plot crosstab bar charts for the categorical variables against churn.
@@ -52,7 +52,7 @@ def plot_crosstabs_cat_vars(data):
 
     return fig
 
-@st.cache(hash_funcs={matplotlib.figure.Figure: lambda _: None})
+@st.cache(hash_funcs={matplotlib.figure.Figure: lambda _: None},ttl=300)
 def plot_crosstabs_cont_vars(data):
     """
     Function to plot crosstab bar charts for the continuous variables against churn.
@@ -75,7 +75,7 @@ def plot_crosstabs_cont_vars(data):
 
 
 # cache data to avoid reloading data
-@st.cache
+@st.cache(ttl=300)
 def load_data():
     """
     Function to load data
