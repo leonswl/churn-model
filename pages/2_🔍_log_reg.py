@@ -40,7 +40,7 @@ def log_reg(data):
             select_c = st.slider("Select regularisation strength C",min_value=0.1, max_value=20.0,value=1.0,step=0.1)
             st.session_state['C'] = select_c
 
-    ## START - Sidebar
+    ## END - Sidebar
 
     ## Filter data based on User Input
     # split predictor and target variables to X and y respectively
