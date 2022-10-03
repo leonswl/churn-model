@@ -3,9 +3,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn.metrics import classification_report
-from src.log_reg import log_model, plot_cnf_matrix, plot_roc_curve, plot_feat_impt, OneHotEncoding, apply_smote
-import matplotlib.pyplot as plt
-from PIL import Image
+from src.log_reg import log_model, plot_roc_curve, plot_feat_impt
+from src.utility import OneHotEncoding, apply_smote, plot_cnf_matrix
 
 
 def log_reg(data):
@@ -14,7 +13,7 @@ def log_reg(data):
     """
 
     st.set_page_config(
-        page_title="EDA",
+        page_title="Log Regression",
         page_icon="📈",
         layout="wide"
     )

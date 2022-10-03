@@ -12,8 +12,6 @@ def app():
 
     st.sidebar.success("Select a demo above")
 
-
-    
     st.title('Churn Model Demo on Telco Customers')
 
     image = Image.open('assets/customer-churn.jpg')
