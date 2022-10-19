@@ -1,6 +1,7 @@
 # Churn Model on Telco data
 
 Source: [Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn?resource=download)
+Running on: [streamlit cloud](https://leonswl-churn-model-main-5fs093.streamlitapp.com/)
 
 ---
 
