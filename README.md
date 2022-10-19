@@ -3,6 +3,8 @@
 Source: [Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn?resource=download)
 Running on: [streamlit cloud](https://leonswl-churn-model-main-5fs093.streamlitapp.com/)
 
+If the app is sleeping due to a period of inactivity, you might need to wait for a couple of minutes to rebuild the app on streamlit's server. 
+
 ---
 
 ## Project Directory
